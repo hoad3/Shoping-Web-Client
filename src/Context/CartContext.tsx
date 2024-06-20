@@ -22,8 +22,8 @@ export const CartProvider: React.FC<{ children: ReactNode, userId: number }> = (
                     setCartId(null);
                 }
 
-                console.log("thong tin",response)
-                console.log("id",cartId)
+                // console.log("thong tin",response)
+                // console.log("id",cartId)
             } catch (error) {
                 console.error("Failed to fetch cart ID", error);
                 setCartId(null);

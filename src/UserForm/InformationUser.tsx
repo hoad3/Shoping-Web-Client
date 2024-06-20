@@ -22,13 +22,13 @@ const InformationUser: React.FC = () => {
     const { userId } = useUserContext(); // Đảm bảo đúng tên biến userId
     const token = localStorage.getItem('authToken');
     // const userId = localStorage.getItem('userId');
-    console.log('token',token)
+    // console.log('token',token)
     //lấy Id của người dùng sau khi đăng nhập
     useEffect(() => {
         const authToken = localStorage.getItem('authToken');
         const userId = localStorage.getItem('userId');
-        console.log('ID:', userId);
-        console.log('Context userId:', authToken);
+        // console.log('ID:', userId);
+        // console.log('Context userId:', authToken);
     }, [userId]);
     //Lưu thông tin người dùng
     const handleSubmit = async (event: React.FormEvent) => {
@@ -42,7 +42,7 @@ const InformationUser: React.FC = () => {
                 Address: address,
                 User_id: userId // Gửi userId lên server để lưu vào InformationUser
             });
-            console.log('UserId', userId);
+            // console.log('UserId', userId);
             setUsername('');
             setPhone('');
             setEmail('');
@@ -91,9 +91,7 @@ const InformationUser: React.FC = () => {
 
                             <button type="submit" className='hover:bg-green-400 w-28 h-14 rounded-lg border border-gray-500'>Save</button>
                     </form>
-                    {/*<div className='flex justify-center items-center w-screen'>*/}
-                    {/*     */}
-                    {/*</div>*/}
+
                 </div>
 
             </div>

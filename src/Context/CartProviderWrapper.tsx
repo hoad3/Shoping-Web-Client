@@ -4,7 +4,7 @@ import { CartProvider } from '../Context/CartContext';
 
 const CartProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { userId } = useUserContext();
-    console.log('userId in CartProviderWrapper:', userId);
+    // console.log('userId in CartProviderWrapper:', userId);
     if (!userId) {
         return (
             <>

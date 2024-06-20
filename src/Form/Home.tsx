@@ -42,7 +42,7 @@ const Home: React.FC = () => {
         email: '',
         address: ''
     });
-    console.log(products)
+    // console.log(products)
     const [currentIndex, setCurrentIndex] = useState(0);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -114,7 +114,7 @@ const Home: React.FC = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userId');
         setIsLoggedIn(false);
-        console.log("da dang xuat ");
+        // console.log("da dang xuat ");
     };
 
     const handleToggleDropdown = () => {

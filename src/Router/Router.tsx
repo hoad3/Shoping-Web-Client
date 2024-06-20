@@ -3,7 +3,7 @@ import App from "../App";
 import LoginForm from "../Form/LoginForm";
 import Register from "../Form/Register";
 import Home from "../Form/Home"
-import Test from "../Form/Test"
+// import Test from "../Form/Test"
 import InformationUser from "../UserForm/InformationUser"
 import FindInformationUser from "../UserForm/FindInformationUser";
 import Cart from "../Component/Cart";
@@ -32,10 +32,10 @@ export const router = createBrowserRouter([
                 path:"Register",
                 element:<Register/>
             },
-            {
-                path:"Test",
-                element:<Test/>
-            },
+            // {
+            //         path:"Test",
+            //     element:<Test/>
+            // },
             {
                 path:"Information_User",
                 element:<InformationUser/>

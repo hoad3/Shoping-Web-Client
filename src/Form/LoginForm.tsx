@@ -25,21 +25,21 @@ const LoginForm: React.FC = () => {
 
             const token = response.data.token;
             const userId = response.data.userid;
-            console.log('Response:', response.data);
+            // console.log('Response:', response.data);
             localStorage.setItem('authToken', token);
             localStorage.setItem('userId', userId);
-            console.log('dang nhap thanh cong ');
-            console.log('User ID:', userId);
+            // console.log('dang nhap thanh cong ');
+            // console.log('User ID:', userId);
 
             if (token) {
                 setUserId(userId);
                 setIsLoggedIn(true);
-                console.log('Set userId:', userId);
+                // console.log('Set userId:', userId);
                 navigate('/');
             }
         } catch (error) {
             console.error('Đăng nhập thất bại:', error);
-            console.log('Đăng nhập không thành công');
+            // console.log('Đăng nhập không thành công');
         }
     };
 

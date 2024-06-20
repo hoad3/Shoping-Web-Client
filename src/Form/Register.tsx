@@ -9,8 +9,8 @@ const RegisterForm: React.FC = () => {
     const handleRegister = async (event: React.FormEvent) => {
         event.preventDefault();
         // Thực hiện đăng ký ở đây, ví dụ: gọi API đăng ký
-        console.log('Account:', account);
-        console.log('Password:', password);
+        // console.log('Account:', account);
+        // console.log('Password:', password);
         await axios.post('http://localhost:5295/register', {
             account,
             password
