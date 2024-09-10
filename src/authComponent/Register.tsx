@@ -1,20 +1,24 @@
 import {useState} from "react";
-import axios from "axios";
 import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {register} from "../Thunks/authThunk";
 
 
 const RegisterForm: React.FC = () => {
+    const dispatch = useDispatch();
     const [account, setAccount] = useState('');
     const [password, setPassword] = useState('');
-    const handleRegister = async (event: React.FormEvent) => {
-        event.preventDefault();
-        // Thực hiện đăng ký ở đây, ví dụ: gọi API đăng ký
-        // console.log('Account:', account);
-        // console.log('Password:', password);
-        await axios.post('http://localhost:5295/register', {
-            account,
-            password
-        })
+    const handleRegister = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            // Gọi phương thức đăng ký
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            await dispatch(register({ account, password }));
+            alert('Đăng ký thành công!');
+        } catch (error) {
+            console.error('Đăng ký thất bại', error);
+        }
     };
 
     return(

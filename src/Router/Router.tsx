@@ -1,17 +1,13 @@
-import {createBrowserRouter, RouteObject} from "react-router-dom";
+import {createBrowserRouter} from "react-router-dom";
 import App from "../App";
-import LoginForm from "../Form/LoginForm";
-import Register from "../Form/Register";
-import Home from "../Form/Home"
-// import Test from "../Form/Test"
-import InformationUser from "../UserForm/InformationUser"
-import FindInformationUser from "../UserForm/FindInformationUser";
-import Cart from "../Component/Cart";
-// import Product from "../Component/Product";
-import SellerProducts from "../Component/Product";
-import ProductDetails from "../Component/InformationProduct";
-
-// import UpdateProduct from "../Component/UpdateProduct";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React from "react";
+import Homepage from "../Form/Homepage";
+import LoginForm from "../authComponent/LoginForm";
+import Register from "../authComponent/Register";
+import UserProductList from "../productComponent/userProduct";
+import UserInfoComponent from "../userComponent/informationUser";
+import CartInfoComponent from "../cartComponent/getCartItemsComponent";
 
 export const router = createBrowserRouter([
 
@@ -22,40 +18,27 @@ export const router = createBrowserRouter([
             {
               index:true,
                 path:'/',
-              element:<Home/>
+              element:<Homepage/>
             },
             {
-                path: "Login",
+                path: "/Login",
                 element:<LoginForm/>
             },
             {
                 path:"Register",
                 element:<Register/>
             },
-            // {
-            //         path:"Test",
-            //     element:<Test/>
-            // },
             {
-                path:"Information_User",
-                element:<InformationUser/>
+              path:'UserProduct',
+                element:<UserProductList/>
             },
             {
-              path:"FindInformationUser",
-              element:<FindInformationUser/>
+                path:'userInfo',
+                element:<UserInfoComponent/>
             },
             {
-                path:"Cart",
-                element:<Cart/>
-            },
-            {
-                path: "Product",
-                element:<SellerProducts/>
-            },
-            {
-              path:"/product/:id",
-                element:<ProductDetails/>,
-
+                path:'cartItem',
+                element:<CartInfoComponent/>
             }
         ]
     }
