@@ -61,3 +61,21 @@ export const fetchShipperInfo = (userId) => async (dispatch) => {
         });
     }
 };
+
+// Thunk để gọi API
+export const fetchShipperByUserId = createAsyncThunk(
+    'shipper/fetchByUserId',
+    async (userId, { rejectWithValue }) => {
+        try {
+            const response = await fetch(`http://localhost:5295/GetShipperByUserId/${userId}`);
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to fetch shipper data');
+            }
+            return data;  // Trả về data (là thông tin của shipper)
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+

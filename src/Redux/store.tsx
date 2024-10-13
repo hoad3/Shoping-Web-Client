@@ -9,6 +9,8 @@ import orderReducer from "../Slices/paymentSlice"
 import checkoutReducer from "../Slices/checkoutSlice"
 import deliveryReducer from "../Slices/DeliverySlices"
 import shipperReducer from "../Slices/shipperSlice"
+import shipperInforReducer from "../Slices/shipperinfoSlice"
+import shipperDelivery from "../Slices/shipperDelivery"
 // Tạo Redux store
 export const store = configureStore({
     reducer: {
@@ -22,6 +24,8 @@ export const store = configureStore({
         delivery: deliveryReducer,
         checkout: checkoutReducer,
         shipper: shipperReducer,
+        shipperinfor: shipperInforReducer,
+        shipperDelivery: shipperDelivery,
     },
 });
 

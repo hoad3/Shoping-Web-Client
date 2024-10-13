@@ -12,6 +12,7 @@ import AddOrderForm from "../paymentComponent/AddOrderForm";
 
 import HandleOrderConponent from "../paymentComponent/HandleOrder";
 import ShipperComponent from "../DeliveryComponent/Shipper"
+import ShipperInforComponent from "../DeliveryComponent/ShipperInforComponent";
 export const router = createBrowserRouter([
 
     {
@@ -53,8 +54,12 @@ export const router = createBrowserRouter([
             },
             {
                 path:'shipper',
-                element:<ShipperComponent/>
-            }
+                element:<ShipperInforComponent/>
+            },
+            // {
+            //     path:'test',
+            //     element:<ShipperInforComponent/>
+            // }
         ]
     }
 ])
