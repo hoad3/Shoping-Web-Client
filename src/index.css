@@ -44,6 +44,7 @@
 }
 
 /* Ẩn checkbox vì nó chỉ là thành phần điều khiển ẩn/hiện */
+/* Ẩn dropdown toggle */
 #dropdown-toggle {
     display: none;
 }
@@ -56,9 +57,7 @@
 
 /* Style cho nút dropdown */
 .dropbtn {
-
-
-    padding: 16px;
+    padding: 5px;
     font-size: 16px;
     border: none;
     cursor: pointer;
@@ -67,23 +66,144 @@
 
 /* Ẩn dropdown list mặc định */
 .dropdown-content {
-    display: none;
+    display: none; /* Ẩn dropdown mặc định */
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
 /* Style cho các liên kết trong dropdown list */
 .dropdown-content a {
     color: black;
+    padding: 12px 16px; /* Khoảng cách cho các item */
+    text-decoration: none;
+    display: block;
+}
+
+/* Hiển thị dropdown list khi hover vào nút dropdown */
+.dropdown:hover .dropdown-content {
+    display: block; /* Hiển thị dropdown khi hover vào thẻ cha */
+}
+
+/* Thay đổi màu nền khi hover vào item trong dropdown */
+.dropdown-content a:hover {
+    background-color: #f1f1f1; /* Màu nền khi hover */
+}
+
+/* Dropdown container */
+.dropdown-user {
+    position: relative;
+    display: inline-block;
+}
+
+/* Toggle button (dropbtn-user) */
+.dropbtn-user {
+    background-color: transparent; /* Loại bỏ background */
+    color: black; /* Màu sắc của icon */
+    padding: 10px 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Icon changes color on hover */
+.dropbtn-user:hover {
+    color: #4CAF50; /* Màu khi hover */
+}
+
+/* Hidden by default dropdown content */
+.dropdown-content-user {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0; /* Căn lề phải */
+}
+
+/* Style for dropdown links/buttons */
+.dropdown-content-user a {
+    color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
 }
 
-/* Hiển thị dropdown list khi checkbox được chọn */
-#dropdown-toggle:checked ~ .dropdown-content {
+.dropdown-content-user a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Show the dropdown content when the checkbox is checked */
+#dropdown-toggle-user:checked + .dropbtn-user + .dropdown-content-user {
     display: block;
+}
+
+/* Extra styling */
+.dropdown-content-user button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.dropdown-content-user button:hover {
+    background-color: #ddd;
+}
+
+/* Hide the checkbox */
+#dropdown-toggle-user {
+    display: none;
+}
+
+.relative {
+    position: relative; /* Để dropdown có thể sử dụng position absolute */
+}
+
+.dropdown-cart {
+    background-color: white; /* Màu nền của dropdown */
+    border: 1px solid #ccc; /* Viền cho dropdown */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+    width: 200px; /* Độ rộng của dropdown */
+    z-index: 100; /* Đảm bảo dropdown nằm trên các phần tử khác */
+}
+
+.dropdown-cart .cart-item {
+    padding: 10px; /* Khoảng cách trong item */
+    border-bottom: 1px solid #ccc; /* Viền giữa các item */
+}
+
+.dropdown-cart .cart-item:last-child {
+    border-bottom: none; /* Không có viền dưới item cuối cùng */
+}
+
+.dropdown-cart .cart-item:hover {
+    background-color: #f0f0f0; /* Màu nền khi hover */
+}
+
+/* Hiển thị dropdown khi hover */
+.relative:hover .dropdown-cart {
+    display: block; /* Hiển thị dropdown khi hover vào div cha */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
 }

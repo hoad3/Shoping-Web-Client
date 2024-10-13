@@ -15,6 +15,7 @@ export const fetchProductsByCartId = createAsyncThunk(
             }
 
             const data = await response.json();
+            console.log("sdasdasd",data)
             dispatch(fetchCartItemsSuccess(data))
         } catch (error) {
             console.error('Error fetching products:', error); // Log the error
@@ -22,3 +23,4 @@ export const fetchProductsByCartId = createAsyncThunk(
         }
     }
 );
+

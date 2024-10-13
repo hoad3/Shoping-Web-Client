@@ -2,13 +2,16 @@ import {createBrowserRouter} from "react-router-dom";
 import App from "../App";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from "react";
-import Homepage from "../Form/Homepage";
+import Homepage from "../homeConponent/Homepage";
 import LoginForm from "../authComponent/LoginForm";
 import Register from "../authComponent/Register";
 import UserProductList from "../productComponent/userProduct";
 import UserInfoComponent from "../userComponent/informationUser";
 import CartInfoComponent from "../cartComponent/getCartItemsComponent";
+import AddOrderForm from "../paymentComponent/AddOrderForm";
 
+import HandleOrderConponent from "../paymentComponent/HandleOrder";
+import ShipperComponent from "../DeliveryComponent/Shipper"
 export const router = createBrowserRouter([
 
     {
@@ -39,6 +42,18 @@ export const router = createBrowserRouter([
             {
                 path:'cartItem',
                 element:<CartInfoComponent/>
+            },
+            {
+                path:'donmua',
+                element:<AddOrderForm/>
+            },
+            {
+              path:'handleOrder',
+                element:<HandleOrderConponent/>
+            },
+            {
+                path:'shipper',
+                element:<ShipperComponent/>
             }
         ]
     }

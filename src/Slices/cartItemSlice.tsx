@@ -6,6 +6,7 @@ import {RootState} from "../Redux/store";
 interface cartItem{
     cartItemId: number;
     cartId: number;
+    quantity: number;
     productId: number;
     product: Product;
 }

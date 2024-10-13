@@ -5,6 +5,7 @@ import {RootState} from "../Redux/store";
 
 interface AuthState {
     userid: number | null;
+    role: number | null;
     token: string | null;
     error: string | null;
     loading: boolean;
@@ -12,6 +13,7 @@ interface AuthState {
 
 const initialState: AuthState = {
     userid: localStorage.getItem('userid') ? JSON.parse(localStorage.getItem('userid') as string) : null,
+    role: localStorage.getItem('role') ? JSON.parse(localStorage.getItem('role') as string) : null,
     token: localStorage.getItem('authToken'),
     error: null,
     loading: false,
@@ -27,12 +29,13 @@ const authSlice = createSlice({
             state.loading = true;
             state.error = null;
         },
-        loginSuccess: (state, action: PayloadAction<{ userid: number; token: string }>) => {
+        loginSuccess: (state, action: PayloadAction<{ userid: number; role: number; token: string }>) => {
             state.userid = action.payload.userid;
+            state.role = action.payload.role;
             state.token = action.payload.token;
             state.loading = false;
 
-            console.log('Reducer: loginSuccess', state.userid, state.token);
+            console.log('Reducer: loginSuccess', state.userid, state.role, state.token);
 
         },
         loginFailure: (state, action: PayloadAction<string>) => {
@@ -41,6 +44,7 @@ const authSlice = createSlice({
         },
         logout: (state) => {
             state.userid = null;
+            state.role = null;
             state.token = null;
             localStorage.removeItem('authToken');
             localStorage.removeItem('userid');

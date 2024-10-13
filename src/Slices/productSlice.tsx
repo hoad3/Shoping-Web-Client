@@ -1,19 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchProducts,PRODUCTS_LIMIT } from '../Thunks/productThunk';
-import {addProduct} from "../Thunks/addProductThunk";
+import {addProduct} from "../Thunks/productThunk";
+import {RootState} from "../Redux/store";
 
 export interface Product {
     id: number;
     name: string;
     value: number;
     image: string;
-    description: string;
+    decription: string;
     stockquantity: number;
     sellerid: number;
     daycreated: string;
 }
 
-interface ProductState {
+export interface ProductState {
     products: Product[];
     loading: boolean;
     error: string | null;
@@ -80,5 +81,6 @@ const productSlice = createSlice({
 });
 
 export const { resetProducts } = productSlice.actions;
+
 export default productSlice.reducer;
 
