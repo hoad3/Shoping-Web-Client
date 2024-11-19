@@ -16,7 +16,7 @@ const UserProductList: React.FC = () => {
     const userid = useSelector(selectUserId)
 
     const [productData, setProductData] = useState({
-        id:0,
+        id: 0,
         name: '',
         value: 0,
         image: null as File | null, // Sửa thành null để lưu trữ file
@@ -38,8 +38,7 @@ const UserProductList: React.FC = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
     const handleDeleteUserProduct = async (Id: number) => {
-        if(Id!== null)
-        {
+        if (Id !== null) {
             console.log("deleteProduct:", Id); // Debugging line
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
@@ -69,8 +68,8 @@ const UserProductList: React.FC = () => {
                     ...productData,
                     image: selectedFile,  // Lưu tệp ảnh được chọn vào state
                 });
-                
-                
+
+
             }
         } else {
             setProductData({
@@ -79,7 +78,6 @@ const UserProductList: React.FC = () => {
             });
         }
     };
-
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -174,52 +172,144 @@ const UserProductList: React.FC = () => {
     return (
         <div className=''>
             <div>
-                <div>
-                    <HeaderComponent/>
-                </div>
+                <HeaderComponent/>
             </div>
-            <div className='mt-14 flex flex-row justify-center m-5'>
-                <div>
-                    <h1>{selectedProduct ? 'Cập Nhật Sản Phẩm' : 'Thêm Sản Phẩm Mới'}</h1>
-                    <form onSubmit={handleSubmit} className='flex flex-col'>
-                        <input type="text" name="name" value={productData.id} onChange={handleChange} placeholder="Product Name" />
-                        <input type="text" name="name" value={productData.name} onChange={handleChange} placeholder="Product Name" />
-                        <input type="number" name="value" value={productData.value} onChange={handleChange} placeholder="Value" />
-                        <input type="file" name="image" onChange={handleChange} accept="image/*" /> {/* Input để tải file */}
-                        <input type="text" name="decription" value={productData.decription} onChange={handleChange} placeholder="Description" />
-                        <input type="number" name="stockquantity" value={productData.stockquantity} onChange={handleChange} placeholder="Stock Quantity" />
-                        <input type="number" name="daycreated" value={productData.daycreated} onChange={handleChange} placeholder="daycreated" />
-
-                        <button type="submit" disabled={loading}>{selectedProduct ? 'Update Product' : 'Add Product'}</button>
-                        {error && <p>{error}</p>}
-                        {formError && <p style={{ color: 'red' }}>{formError}</p>}
+            <div className='flex justify-center mt-14'>
+                <div className='w-full max-w-md bg-white shadow-lg rounded-lg p-8 m-5'>
+                    <h1 className='text-2xl font-semibold text-center mb-6'>
+                        {selectedProduct ? 'Cập Nhật Sản Phẩm' : 'Thêm Sản Phẩm Mới'}
+                    </h1>
+                    <form onSubmit={handleSubmit} className='flex flex-col space-y-4'>
+                        {/*<input*/}
+                        {/*    type="text"*/}
+                        {/*    name="id"*/}
+                        {/*    value={productData.id}*/}
+                        {/*    onChange={handleChange}*/}
+                        {/*    placeholder="Product ID"*/}
+                        {/*    className='border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'*/}
+                        {/*/>*/}
+                        <input
+                            type="text"
+                            name="name"
+                            value={productData.name}
+                            onChange={handleChange}
+                            placeholder="Product Name"
+                            className='border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                        <input
+                            type="number"
+                            name="value"
+                            value={productData.value}
+                            onChange={handleChange}
+                            placeholder="Value"
+                            className='border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                        <input
+                            type="file"
+                            name="image"
+                            onChange={handleChange}
+                            accept="image/*"
+                            className='border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                        <input
+                            type="text"
+                            name="description"
+                            value={productData.decription}
+                            onChange={handleChange}
+                            placeholder="Description"
+                            className='border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                        <input
+                            type="number"
+                            name="stockquantity"
+                            value={productData.stockquantity}
+                            onChange={handleChange}
+                            placeholder="Stock Quantity"
+                            className='border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                        <input
+                            type="date"
+                            name="daycreated"
+                            value={productData.daycreated}
+                            onChange={handleChange}
+                            placeholder="Day Created"
+                            className='border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                        />
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className='bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed'
+                        >
+                            {selectedProduct ? 'Update Product' : 'Add Product'}
+                        </button>
+                        {error && <p className='text-red-500 text-center mt-2'>{error}</p>}
+                        {formError && <p className='text-red-500 text-center mt-2'>{formError}</p>}
                     </form>
                 </div>
-                <div>
-                    <h1>Product List</h1>
-                    <ul>
+            </div>
+            <div className='w-full flex justify-center mt-10'>
+                <div className="container mx-5 p-4 ">
+                    <h1 className="text-2xl font-bold mb-4 flex justify-center">Sản phẩm tồn kho</h1>
+                    <div className="bg-gray-100 p-4 rounded-lg shadow">
                         {products.length > 0 ? (
-                            products.map((product) => (
-                                <li key={product.id}>
-                                    <img src={product.image} alt={product.name} />
-                                    <h2>{product.id}</h2>
-                                    <h2>{product.name}</h2>
-                                    <p>{product.description}</p>
-                                    <p>Price: {product.value}</p>
-                                    <p>Stock: {product.stockquantity}</p>
-                                    <button onClick={() => handleEditProduct(product)}>Update Product</button>
-                                    <button onClick={() => handleDeleteUserProduct(product.id)}>Remove</button>
-                                </li>
-                            ))
+                            <div>
+                                <div
+                                    className="grid grid-cols-12 gap-4 border-b border-gray-300 font-semibold text-gray-600 p-2">
+                                    <div className="col-span-2">Image</div>
+                                    <div className="col-span-2">ID</div>
+                                    <div className="col-span-2">Name</div>
+                                    <div className="col-span-3">Description</div>
+                                    <div className="col-span-1">Price</div>
+                                    <div className="col-span-1">Stock</div>
+                                    <div className="col-span-1">Actions</div>
+                                </div>
+                                {products.map((product) => (
+                                    <div key={product.id}
+                                         className="grid grid-cols-12 gap-4 p-4 border-b border-gray-200 text-center">
+                                        <div className="col-span-2 flex justify-center items-center">
+                                            <img src={product.image} alt={product.name}
+                                                 className="h-20 w-20 object-cover rounded-md"/>
+                                        </div>
+                                        <div className="col-span-2 flex items-center justify-center">
+                                            <span>{product.id}</span>
+                                        </div>
+                                        <div className="col-span-2 flex items-center justify-center">
+                                            <span className="font-medium">{product.name}</span>
+                                        </div>
+                                        <div className="col-span-3 flex items-center justify-center">
+                                            <span className="text-gray-600">{product.decription}</span>
+                                        </div>
+                                        <div className="col-span-1 flex items-center justify-center">
+                                            <span className="font-semibold text-blue-600">${product.value}</span>
+                                        </div>
+                                        <div className="col-span-1 flex items-center justify-center">
+                                            <span>{product.stockquantity}</span>
+                                        </div>
+                                        <div className="col-span-1 flex items-center justify-center space-x-2">
+                                            <button
+                                                onClick={() => handleEditProduct(product)}
+                                                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded"
+                                            >
+                                                Update
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteUserProduct(product.id)}
+                                                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         ) : (
-                            <p>No products found</p>
+                            <p className="text-gray-500 text-center mt-4">No products found</p>
                         )}
-                    </ul>
+                    </div>
                 </div>
             </div>
 
         </div>
     );
-};
-
+}
 export default UserProductList;

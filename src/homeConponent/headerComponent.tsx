@@ -7,10 +7,11 @@ import {Link, useNavigate} from "react-router-dom";
 import {IoHomeOutline} from "react-icons/io5";
 import SearchBar from "../Component/SearchBar";
 import {FiShoppingCart, FiUser} from "react-icons/fi";
-import {AiOutlineInbox} from "react-icons/ai";
 import {IoMdArrowDropdown} from "react-icons/io";
-import { AiTwotoneUsb } from "react-icons/ai";
-import { LiaShippingFastSolid } from "react-icons/lia";
+import {LiaShippingFastSolid} from "react-icons/lia";
+import {FaRegMoneyBillAlt, FaRegUser} from "react-icons/fa";
+import {LuWarehouse} from "react-icons/lu";
+import {PiWarehouseBold} from "react-icons/pi";
 const headerComponent: React.FC =() =>{
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { userid, role } = useSelector((state: RootState) => state.auth);
@@ -31,6 +32,9 @@ const headerComponent: React.FC =() =>{
     const handleInfor =() =>{
         navigate('/userInfo');
     }
+
+
+
     console.log('adasdasd', role)
     return(
         <div>
@@ -46,57 +50,74 @@ const headerComponent: React.FC =() =>{
                         <SearchBar />
                     </div>
                     <div className='w-auto h-20 flex justify-center items-center'>
-                        <div className='m-5'>
-                            <div className="relative">
-                                    <FiShoppingCart size="30" />
-                                <div className="dropdown-cart absolute hidden">
-                                    <div className="cart-item"><Link to='/cartItem'>Giỏ hàng</Link></div>
-                                    <div className="cart-item">Item 2</div>
-                                    <div className="cart-item">Item 3</div>
+                        <div className='m-5 flex flex-row items-center'>
+                            {role === 1 && (
+                                <>
+                                    <div className="relative m-5">
+                                        <FiShoppingCart size="30" />
+                                        <div className="dropdown-cart absolute hidden">
+                                            <div className="cart-item">
+                                                <Link to='/cartItem'>Giỏ hàng</Link>
+                                            </div>
+                                            <div className="cart-item">
+                                                <Link to='/Pay_List'>Lịch sử mua hàng</Link>
+                                            </div>
+                                            <div className="cart-item">Item 3</div>
+                                        </div>
+                                    </div>
+
+                                    <div className='m-5'>
+                                        <Link to='/UserProduct'>
+                                            <LuWarehouse className='flex justify-center items-center' size='30' />
+                                        </Link>
+                                    </div>
+
+                                    <div className='m-5 flex flex-row'>
+                                        <FaRegMoneyBillAlt className='flex justify-center items-center' size='30' />
+                                        <div className="dropdown">
+                                            <input type="checkbox" id="dropdown-toggle" />
+                                            <label className="dropbtn" htmlFor="dropdown-toggle">
+                                                <IoMdArrowDropdown />
+                                            </label>
+                                            <div className="dropdown-content flex flex-row min-w-80">
+                                                <a className='flex flex-col'>
+                                                    <div className='flex justify-center items-center h-10 mt-3 border-b-2 border-gray-300 w-full'>
+                                                        <Link to='/donmua'>Quản lý đơn hàng</Link>
+                                                    </div>
+                                                    <div className='flex justify-center items-center h-10 w-full'>
+                                                        <Link to='/handleOrder'>Đơn hàng đang xử lý</Link>
+                                                    </div>
+                                                    <div className='flex justify-center items-center h-10 mb-3 border-t-2 border-gray-300 w-full'>
+                                                        <Link to=''>Quản lý đơn hàng</Link>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+
+                            {role === 2 && (
+                                <div className='flex flex-row m-2'>
+                                    <Link to='/adminProduct'>
+                                        <PiWarehouseBold   className='flex justify-center items-center m-5' size='30' />
+                                    </Link>
+                                    <Link to='/adminUser'>
+                                        <FaRegUser className='flex justify-center items-center m-5' size='30' />
+                                    </Link>
+
+
                                 </div>
-                            </div>
-                        </div>
+                            )}
 
-                        <div className='m-5'>
-                            <Link to='/UserProduct'>
-                                <AiOutlineInbox
-                                    className='flex justify-center items-center' size='30'
-                                />
-                            </Link>
-                        </div>
-
-                        <div className='m-5 flex flex-row'>
-                            <AiTwotoneUsb className='flex justify-center items-center' size='30'/>
-                            <div className="dropdown ">
-                                <input type="checkbox" id="dropdown-toggle"/>
-                                <label className="dropbtn" htmlFor="dropdown-toggle"><IoMdArrowDropdown /></label>
-
-
-                                <div className="dropdown-content flex flex-row min-w-80">
-                                    <a className='flex flex-col'>
-                                        <div className='flex justify-center items-center h-10 mt-3 border-b-2 border-gray-300 w-full'>
-                                            <Link className='' to='/donmua'>Quản lý đơn hàng</Link>
-                                        </div>
-                                        <div className='flex justify-center items-center h-10 w-full'>
-                                            <Link  to='/handleOrder'>Đơn hàng đang xử lý</Link>
-                                        </div>
-                                        <div  className='flex justify-center items-center h-10 mb-3 border-t-2 border-gray-300 w-full'>
-                                            <Link to=''>Quản lý đơn hàng</Link>
-                                        </div>
-
-
-
-                                    </a>
+                            {role === 3 && (
+                                <div className='m-2'>
+                                    <Link to='/shipper'>
+                                        <LiaShippingFastSolid className='flex justify-center items-center' size='30' />
+                                    </Link>
                                 </div>
-                            </div>
+                            )}
                         </div>
-
-                        {role !== 1 && (
-                            <div className='m-5'>
-                                <Link to='/shipper'><LiaShippingFastSolid className='flex justify-center items-center' size='30'/></Link>
-
-                            </div>
-                        )}
 
                         <div className="w-80 h-auto flex justify-center items-center">
 

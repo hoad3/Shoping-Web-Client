@@ -207,3 +207,23 @@ th, td {
     padding: 8px;
     text-align: left;
 }
+
+
+.slide-enter {
+    transform: translateY(-20px);
+    opacity: 0;
+}
+.slide-enter-active {
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform 300ms ease, opacity 300ms ease;
+}
+.slide-exit {
+    transform: translateY(0);
+    opacity: 1;
+}
+.slide-exit-active {
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 300ms ease, opacity 300ms ease;
+}

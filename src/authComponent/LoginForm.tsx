@@ -48,18 +48,26 @@ const LoginForm: React.FC = () => {
                             <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)}
                                    className="m-5 w-96 h-14 px-4 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300 border border-gray-300" placeholder="Nhập mật khẩu của bạn" />
                         </div>
+
+                        <a className='ml-10' href='/fogotpassword'>
+                            Quên mật khẩu
+                        </a>
                     </div>
-                    <div className='flex-row'>
-                        <button
-                            type="submit"
-                            className="m-4 bg-blue-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300"
-                            disabled={loading}
-                        >
-                            Đăng nhập
-                        </button>
-                        <button className='m-4 bg-blue-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300'>
-                            <Link to='/Register' className='text-white'>Đăng ký</Link>
-                        </button>
+                    <div className='flex-col'>
+
+                        <div className='flex-row'>
+                            <button
+                                type="submit"
+                                className="m-4 bg-blue-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300"
+                                disabled={loading}
+                            >
+                                Đăng nhập
+                            </button>
+                            <button className='m-4 bg-blue-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300'>
+                                <Link to='/Register' className='text-white'>Đăng ký</Link>
+                            </button>
+                        </div>
+
                     </div>
                 </form>
                 {error && <p className="text-red-500 mt-2">{error}</p>}

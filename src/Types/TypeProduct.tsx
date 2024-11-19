@@ -3,7 +3,7 @@ export interface UserProduct {
     name: string;
     value: number;
     image: string;
-    description: string;
+    decription: string;
     stockquantity: number;
     sellerid: number;
     daycreated: string;

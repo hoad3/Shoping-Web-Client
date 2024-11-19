@@ -6,6 +6,10 @@ import {enqueueSnackbar} from "notistack";
 import addDeliveryAction from "../DeliveryComponent/Delivery";
 import {fetchShippers} from "../Thunks/DeliveryThunk";
 import {ShipperState} from "../Slices/DeliverySlices";
+import {RootState} from "../Redux/store";
+import {fetchUserInfo} from "../Thunks/informationUserThunk";
+import {selectUserInfo} from "../Slices/informationUserSlice";
+
 
 
 const HandleOrderConponent = () =>
@@ -13,9 +17,17 @@ const HandleOrderConponent = () =>
     const dispatch = useDispatch();
     const [thanhtoanData, setthanhtoanData] = useState(null);
     // const userid = useSelector(selectUserId);
-    const [idShipper, setIdShipper] = useState(0);
     const { shippers, status, error } = useSelector((state: { shipper: ShipperState }) => state.shipper);
     const [selectedShipperId, setSelectedShipperId] = useState(0);
+    const userInfo = useSelector((state: RootState) => state.fetchUserInfo.userInfo);
+
+
+    interface Thanhtoan {
+        id: number;
+        idnguoimua: number;
+        // Thêm các thuộc tính khác nếu cần
+    }
+
     // Gọi fetchShippers để lấy danh sách shipper từ API
     useEffect(() => {
         if (status === 'idle') {
@@ -24,6 +36,19 @@ const HandleOrderConponent = () =>
             dispatch(fetchShippers());
         }
     }, [status, dispatch]);
+
+    // Gọi fetchInformationsByUserid để lấy thông tin người dùng từ API
+    useEffect(() => {
+        if (thanhtoanData) {
+            (thanhtoanData as Thanhtoan[]).forEach((thanhtoan) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                dispatch(fetchUserInfo(thanhtoan.idnguoimua)); // Gọi Thunk để fetch thông tin người dùng
+                console.log('thong tin nguoi dung', userInfo)
+            });
+        }
+    }, [thanhtoanData, dispatch]);
+
     useEffect(() => {
         const fetchDonmua = async () => {
             try {
@@ -45,6 +70,7 @@ const HandleOrderConponent = () =>
 
         fetchDonmua();
     }, [dispatch]);
+
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
@@ -88,8 +114,11 @@ const HandleOrderConponent = () =>
                     <HeaderComponent/>
                 </div>
                 <div className='w-full flex justify-center'>
-                    <div className='mt-28 w-3/4 flex flex-col justify-center items-center'>
-                        <h1>Xử lý đơn hàng</h1>
+                    <div className='mt-28  flex flex-col justify-center items-center'>
+                        <h1 className="text-2xl font-bold mb-4 flex justify-center">Xử lý đơn hàng</h1>
+                        <div className="mb-4">
+
+                        </div>
                         <div className='flex flex-row w-full '>
                             <div className='w-full h-auto'>
                                 {thanhtoanData.map((thanhtoan) =>{
@@ -101,19 +130,30 @@ const HandleOrderConponent = () =>
                                     const disableButton5 = trangthaidonhang >= 5; // Vô hiệu hóa nút 3 nếu trạng thái >= 3
                                     return(
                                         <div key={thanhtoan.id} className='flex flex-row items-center w-full h-auto border-t-2 mt-16'>
-                                            <div className=' flex justify-center items-center'>
-                                                <img src={thanhtoan.product.image} alt={thanhtoan.product.name} className='h-40 w-40'/>
+                                            <div className='flex flex-row h-56 border-2 rounded-lg shadow-2xl items-center'>
+                                                <div className=' flex justify-center items-center'>
+                                                    <img src={thanhtoan.product.image} alt={thanhtoan.product.name} className='h-40 w-40'/>
+                                                </div>
+                                                <div className='flex flex-col'>
+                                                    <div>người bán: {thanhtoan.idnguoimua}</div>
+                                                    <div>người mua: {thanhtoan.nguoimua}</div>
+                                                    <div>Ngày đặt: {thanhtoan.ngaythanhtoan}</div>
+                                                    <div>Đơn giá: {thanhtoan.product.value}</div>
+                                                    <div>Số lượng: {thanhtoan.soluong}</div>
+                                                    <div>Tên sản phẩm: {thanhtoan.product.name}</div>
+                                                    <div>Tổng tiền: {thanhtoan.tongtien}</div>
+                                                    <div>Trạng thái đơn hàng: {thanhtoan.trangthaidonhang}</div>
+                                                </div>
                                             </div>
-                                            <div className='flex flex-col'>
-                                                <div>người bán: {thanhtoan.nguoiban}</div>
-                                                <div>ID thanh toán: {thanhtoan.id}</div>
-                                                <div>người mua: {thanhtoan.nguoimua}</div>
-                                                <div>Ngày đặt: {thanhtoan.ngaythanhtoan}</div>
-                                                <div>Đơn giá: {thanhtoan.dongia}</div>
-                                                <div>Số lượng: {thanhtoan.soluong}</div>
-                                                <div>Tên sản phẩm: {thanhtoan.product.name}</div>
-                                                <div>Tổng tiền: {thanhtoan.tongtien}</div>
-                                                <div>Trạng thái đơn hàng: {thanhtoan.trangthaidonhang}</div>
+                                            <div className='m-5 border-2 h-56 rounded-lg shadow-2xl flex items-center w-72'>
+                                                {userInfo && (
+                                                    <div>
+                                                        <p className='m-2'>Tên người dùng: {userInfo.username}</p>
+                                                        <p className='m-2'>Số điện thoại: {userInfo.phone}</p>
+                                                        <p className='m-2'>Email: {userInfo.email}</p>
+                                                        <p className='m-2'>Địa chỉ: {userInfo.address}</p>
+                                                    </div>
+                                                )}
                                             </div>
                                             <button
                                                 className={`bg-blue-400 h-8 flex justify-center items-center rounded-lg ml-2 w-20 ${disableButton1 ? 'opacity-50 cursor-not-allowed' : ''}`}

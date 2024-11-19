@@ -91,3 +91,18 @@ export const updateInfoUser = createAsyncThunk(
         }
     }
 );
+export const fetchUserInfo = createAsyncThunk(
+    'userInfo/fetchUserInfo',
+    async (idNguoiMua: number) => {
+        const response = await fetch(`https://localhost:7098/FindByNguoiMuaId/${idNguoiMua}`);
+
+        // Kiểm tra phản hồi từ API
+        if (!response.ok) {
+            throw new Error('Failed to fetch user info');
+        }
+
+        const data = await response.json();
+        console.log('dasdasc',data)
+        return data; // Trả về dữ liệu JSON
+    }
+);

@@ -44,3 +44,31 @@ export const register = createAsyncThunk(
         }
     }
 );
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+export const changePassword = (email, newPassword) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return async (dispatch) => {
+        try {
+            const response = await fetch(`https://localhost:7098/change-password?email=${encodeURIComponent(email)}&password=${encodeURIComponent(newPassword)}`, {
+                method: 'POST', // Giả sử bạn sử dụng POST
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to change password');
+            }
+
+            const data = await response.json();
+            dispatch({ type: 'CHANGE_PASSWORD_SUCCESS', payload: data });
+        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            dispatch({ type: 'CHANGE_PASSWORD_FAIL', payload: error.message });
+        }
+    };
+};

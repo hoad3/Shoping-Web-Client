@@ -10,6 +10,7 @@ interface Delivery {
     trangthaidonhang: number;
     nguoimua: string;
     nguoiban: string;
+    trangthaithanhtoan: number;
 }
 
 interface DeliveryState {

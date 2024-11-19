@@ -3,14 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import {createCart, FetchCartsByUserId} from '../Thunks/getcartThunk';
 import { selectUserId } from '../Slices/authSlice';
 import {selectCartError, selectCartLoading} from "../Slices/getCartSlice";
-import {selectCartItemIds, selectCartItems} from "../Slices/cartItemSlice";
+import { selectCartItems} from "../Slices/cartItemSlice";
 import {deleteCartItem} from "../Thunks/deleteCartItemThunk";
 import {enqueueSnackbar} from "notistack";
 import HeaderComponent from "../homeConponent/headerComponent"
 import {addCartItem} from "../Thunks/addCartItemsThunk";
 // import {useNavigate} from "react-router-dom";
 import {addDonhang} from "../Thunks/paymentThunks";
-import {Console} from "inspector";
+import {selectUserInfo} from "../Slices/informationUserSlice";
+import {createPayment} from "../Thunks/PayhandleThunk";
+import {Invoice} from "../Thunks/PayhandleThunk"
 // import {updateCartItemQuantity} from "../Thunks/addCartItemsThunk";
 
 const CartInfoComponent: React.FC = () => {
@@ -23,8 +25,11 @@ const CartInfoComponent: React.FC = () => {
     const userid = useSelector(selectUserId)
     const cartItem = useSelector(selectCartItems)
     const [selectedItems, setSelectedItems] = useState<number[]>([]); // Lưu trữ các sản phẩm được chọn
-    const [totalPrice, setTotalPrice] = useState(0); // Tổng giá tiền
+    const [ totalPrice, setTotalPrice] = useState(0); // Tổng giá tiền
     const [paymentMethod, setPaymentMethod] = useState(1);
+    const userDetails = useSelector(selectUserInfo);
+
+
     useEffect(() => {
 
         // Gọi `FetchCartsByUserId` khi component được mount
@@ -35,7 +40,6 @@ const CartInfoComponent: React.FC = () => {
     const handleDeleteUserItem = async (cartItemId: number) => {
         if(cartItemId!== null)
         {
-            // console.log("Cart ID:", cartItemId); // Debugging line
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
            const resultAction = await dispatch(deleteCartItem(cartItemId));
@@ -113,6 +117,7 @@ const CartInfoComponent: React.FC = () => {
                 productId: item.productId,
                 quantity: -1, // Giảm số lượng xuống 1
                 cartItemId
+
             }));
 
             if (addCartItem.fulfilled.match(resultAction)) {
@@ -124,34 +129,75 @@ const CartInfoComponent: React.FC = () => {
         }
     };
     const handleCheckout = async () => {
-        // Lọc các sản phẩm được chọn từ cartItem dựa trên selectedItems
         const selectedCartItems = cartItem.filter(item => selectedItems.includes(item.cartItemId));
-
 
         if (selectedCartItems.length === 0) {
             enqueueSnackbar('Vui lòng chọn ít nhất một sản phẩm để mua', { variant: 'warning' });
             return;
         }
-        for(const item of selectedCartItems)
-        {
-            const formdata ={
-                idnguoiban: item.product.sellerid || null, // Giả sử chỉ có một seller
-                idnguoimua: userid || null, // Giả sử bạn có thông tin user hiện tại
-                idproduct: item.productId || null, // Giả sử chỉ có một sản phẩm
+        const generateRandomInvoiceId = () => {
+            return Math.floor(Math.random() * 1000000); // Ví dụ: tạo một số ngẫu nhiên trong khoảng 0 - 999999
+        };
+
+        // Dữ liệu thanh toán
+        const invoiceData: Invoice = {
+            invoiceId: generateRandomInvoiceId(), // Nếu có thể, hoặc bạn có thể lấy từ API
+            memberId: userDetails?.user_id?? 0, // id người dùng
+            invoiceDate: new Date().toISOString(), // Ngày hiện tại
+            givenName: userDetails?.username?? '', // Tên người dùng
+            surname: userDetails?.username?? '', // Họ người dùng, nếu có
+            phone: userDetails?.phone?? 0, // Số điện thoại người dùng
+            address: userDetails?.address?? '', // Địa chỉ người dùng
+            amount: totalPrice?? 0, // Tổng tiền
+            invoiceDetails: selectedCartItems.map(item => ({
+                invoiceId: generateRandomInvoiceId(), // Nếu có thể, hoặc bạn có thể lấy từ API
+                productId: item.productId,
+                price: item.product.value,
+                quantity: item.quantity,
+            })),
+        };
+
+        console.log('Thong tin thanh toan:',invoiceData)
+
+        // Gọi API để tạo đơn hàng và gửi dữ liệu thanh toán
+        for (const item of selectedCartItems) {
+            const formdata = {
+                idnguoiban: item.product.sellerid || null,
+                idnguoimua: userid || null,
+                idproduct: item.productId || null,
                 ngaydat: new Date().toISOString(),
-                dongia: item.product.value, // Đơn giá của sản phẩm
-                soluong: item.quantity, // Số lượng của sản phẩm
-                name: item.product.name, // Tên sản phẩm
-                tongtien: item.product.value * item.quantity, // Tổng tiền của đơn hàng
+                dongia: item.product.value,
+                soluong: item.quantity,
+                name: item.product.name,
+                tongtien: item.product.value * item.quantity,
                 phuongthucthanhtoan: paymentMethod,
             };
-            // Gọi API để thêm đơn mua cho từng sản phẩm
+
             try {
+                // Gọi API để thêm đơn mua cho từng sản phẩm
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-expect-error
                 const resultAction = await dispatch(addDonhang(formdata));
                 if (addDonhang.fulfilled.match(resultAction)) {
                     enqueueSnackbar(`Đã thêm đơn mua cho sản phẩm: ${item.product.name}`, { variant: 'success' });
+
+                    // Gọi API thanh toán nếu chọn phương thức thanh toán online
+                    if (paymentMethod === 2) {
+                        // Gọi thunk createPayment với dữ liệu thanh toán
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-expect-error
+                        const paymentResult = await dispatch(createPayment(invoiceData));
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-expect-error
+                        if (createPayment.fulfilled.match(paymentResult)) {
+                            const paymentUrl = paymentResult.payload; // Lấy URL thanh toán từ payload
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-expect-error
+                            window.location.href = paymentUrl; // Chuyển hướng tới trang thanh toán
+                        } else {
+                            enqueueSnackbar('Lỗi khi tạo thanh toán', { variant: 'error' });
+                        }
+                    }
 
                     await handleDeleteUserItem(item.cartItemId);
                 } else {
@@ -162,8 +208,13 @@ const CartInfoComponent: React.FC = () => {
             }
         }
 
-
+        // Thông báo cho người dùng về tình trạng thành công
+        if (paymentMethod === 1) { // Nếu là thanh toán khi nhận hàng
+            enqueueSnackbar('Đã tạo đơn hàng thành công, vui lòng thanh toán khi nhận hàng!', { variant: 'success' });
+        }
     };
+
+
 
     if (loading) return <div>Loading...</div>;
     if (error) {
@@ -186,52 +237,57 @@ const CartInfoComponent: React.FC = () => {
                 <HeaderComponent/>
             </div>
             <div className='flex flex-col m-5'>
-                <h1>Cart Items</h1>
+                <h1 className='text-2xl font-bold mb-4'>Cart Items</h1>
 
-                <ul  className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl m-10'>
-                    {cartItem.map(item => (
-                        <li key={item.cartItemId} className='rounded-lg border-red-400 border-2 flex flex-col justify-center'>
-                            <div className='flex flex-col items-center'>
-                                <img src={item.product.image} alt={item.product.name} className='h-40 w-40 object-cover mb-4' />
-                                <div className='w-full'>
-                                    <h2>{item.product.name}</h2>
-                                    <p>{item.product.decription}</p>
-                                    {/*<p>id: {item.cartItemId}</p>*/}
-                                    <p>Price: {item.product.value}</p>
-                                    <p>Stock: {item.product.stockquantity}</p>
-                                    {/*<p>SellerId: {item.product.sellerid}</p>*/}
+                <div className='overflow-x-auto'>
+                    <div className='min-w-full border border-gray-300'>
+                        {/* Header */}
+                        <div className='grid grid-cols-5 bg-gray-100 text-gray-600 font-semibold p-4'>
+                            <div className='flex justify-center'>Image</div>
+                            <div className='flex justify-center'>Product Name</div>
+                            <div className='flex justify-center'>Price</div>
+                            <div className='flex justify-center'>Stock</div>
+                            <div className='flex justify-center'>Actions</div>
+                        </div>
 
+                        {/* Body */}
+                        {cartItem.map(item => (
+                            <div key={item.cartItemId} className='grid grid-cols-5 border-b border-gray-200 p-4'>
+                                <div className='flex justify-center'>
+                                    <img src={item.product.image} alt={item.product.name} className='h-20 w-20 object-cover' />
                                 </div>
-                                <div className='flex flex-col'>
-                                    {/* Hiển thị số lượng trong giỏ hàng */}
-                                    <div className='m-2'>
-                                        <p>Quantity in Cart: {item.quantity}</p>
-                                    </div>
-                                    <div>
-                                        <button className='mr-10' onClick={() => handleIncreaseQuantity(item.cartItemId)}>Tăng</button>
-                                        <button className='ml-10' onClick={() => handleDecreaseQuantity(item.cartItemId)}>Giảm</button>
-                                    </div>
-
+                                <div className='flex justify-center items-center'>
+                                    <span>{item.product.name}</span>
+                                </div>
+                                <div className='flex justify-center items-center'>
+                                    <span>{item.product.value}</span>
+                                </div>
+                                <div className='flex justify-center items-center'>
+                                    <span>{item.quantity}</span>
+                                </div>
+                                <div className='flex justify-center items-center space-x-2'>
+                                    <button className='bg-blue-500 text-white py-1 px-2 rounded' onClick={() => handleIncreaseQuantity(item.cartItemId)}>Tăng</button>
+                                    <button className='bg-blue-500 text-white py-1 px-2 rounded' onClick={() => handleDecreaseQuantity(item.cartItemId)}>Giảm</button>
+                                    <button className='bg-red-500 text-white py-1 px-2 rounded' onClick={() => handleDeleteUserItem(item.cartItemId)}>Remove</button>
+                                    <input
+                                        type="checkbox"
+                                        onChange={(e) => handleSelectItem(item.cartItemId, item.product.value, e.target.checked)}
+                                    />
                                 </div>
                             </div>
-                            <div className='flex flex-row justify-center m-5'>
-                                <button onClick={() => handleDeleteUserItem(item.cartItemId)}>Remove</button>
-                                <input
-                                    type="checkbox"
-                                    onChange={(e) => handleSelectItem(item.cartItemId, item.product.value, e.target.checked)}
-                                    className='ml-10'
-                                />
-                            </div>
-
-                        </li>
-                    ))}
-                </ul>
+                        ))}
+                    </div>
+                </div>
                 <div className='w-full h-16 backdrop-blur-sm bg-white/30 fixed bottom-0 z-50 flex items-center'>
                     <div className='mb-4'>
                         <label className='mr-2'>Phương thức thanh toán:</label>
                         <select
                             value={paymentMethod}
-                            onChange={(e) => setPaymentMethod(Number(e.target.value))}
+                            onChange={(e) => {
+                                const selectedMethod = Number(e.target.value);
+                                console.log("Phương thức thanh toán đã chọn:", selectedMethod);
+                                setPaymentMethod(selectedMethod);
+                            }}
                             className='border p-2 rounded'
                         >
                             <option value={1}>Thanh toán khi nhận hàng</option>

@@ -4,7 +4,6 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 import {selectUserId} from "../Slices/authSlice";
 import {RootState} from "../Redux/store";
-import {useSelector} from "react-redux";
 // import {fetchProductsFailure} from "../Slices/userProductSlice";
 
 
@@ -42,9 +41,9 @@ export const addDonhang = createAsyncThunk(
                 const data = await response.json();
                 console.log('Đơn hàng đã được tạo thành công:', data);
                 // Điều hướng đến trang khác hoặc thông báo cho người dùng
-            } else {
-                console.error('Có lỗi khi tạo đơn hàng');
             }
+            const data = await response.json();
+            return { donmuaid: data.donmuaid };
         } catch (error) {
             console.error('Lỗi kết nối API:', error);
         }
@@ -79,6 +78,36 @@ export const getdonhang = createAsyncThunk(
     }
 
 );
+
+export const PaymentListNguoimua = createAsyncThunk(
+    'getdonhang/donhang',
+    async (_,{getState,rejectWithValue }) => {
+        const state = getState() as RootState;
+        const userid = selectUserId(state); // Lấy userid từ state
+        try {
+            const response = await fetch(`https://localhost:7098/Get_Donmua_Nguoimua/${userid}`,{
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                return rejectWithValue('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log("id cart", data)
+            console.log('API response data:', data); // Thêm log để kiểm tra dữ liệu trả về
+            return data;
+        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            dispatch(rejectWithValue(error.message()));
+            throw error;
+        }
+    }
+
+);
+
 
 export const HandleOrder = createAsyncThunk(
     'handleOder/Thanhtoan',
